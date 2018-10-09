@@ -3,6 +3,7 @@
 
 import argparse
 import os
+import sys
 import math
 
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops
@@ -125,7 +126,7 @@ def main():
 
     args = parse.parse_args()
 
-    if isinstance(args.mark, str):
+    if isinstance(args.mark, str) and sys.version_info[0] < 3:
         args.mark = args.mark.decode("utf-8")
 
     mark = gen_mark(args)
