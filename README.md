@@ -5,7 +5,7 @@
 
 # usage
 
-需要PIL库 `pip install Pillow`
+需要 PIL 库 `pip install Pillow`
 
 ```
 usage: marker.py [-h] [-f FILE] [-m MARK] [-o OUT] [-c COLOR] [-s SPACE]
@@ -24,11 +24,11 @@ optional arguments:
                         rotate angel of watermarks, default is 30
   --size SIZE           font size of text, default is 50
   --opacity OPACITY     opacity of watermarks, default is 0.15
+  --quality QUALITY     quality of output images, default is 90
 ```
 
 # 效果
+
 `python marker.py -f ./input/test.png -m 添加水印`
 
 ![](https://github.com/2Dou/watermarker/raw/master/output/test.png)
-
-

@@ -12,6 +12,7 @@ from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops
 TTF_FONT = os.path.join("font", "青鸟华光简琥珀.ttf")
 TTF_FONT = os.path.join(os.path.dirname(os.path.abspath(__file__)), TTF_FONT)
 
+
 def add_mark(imagePath, mark, args):
     '''
     添加水印，然后保存图片
@@ -27,11 +28,12 @@ def add_mark(imagePath, mark, args):
         new_name = os.path.join(args.out, name)
         if os.path.splitext(new_name)[1] != '.png':
             image = image.convert('RGB')
-        image.save(new_name)
+        image.save(new_name, quality=args.quality)
 
         print(name + " Success.")
     else:
         print(name + " Failed.")
+
 
 def set_opacity(im, opacity):
     '''
@@ -44,6 +46,7 @@ def set_opacity(im, opacity):
     im.putalpha(alpha)
     return im
 
+
 def crop_image(im):
     '''裁剪图片边缘空白'''
     bg = Image.new(mode='RGBA', size=im.size)
@@ -53,6 +56,7 @@ def crop_image(im):
     if bbox:
         return im.crop(bbox)
     return im
+
 
 def gen_mark(args):
     '''
@@ -67,10 +71,10 @@ def gen_mark(args):
     # 生成文字
     draw_table = ImageDraw.Draw(im=mark)
     draw_table.text(xy=(0, 0),
-        text=args.mark,
-        fill=args.color,
-        font=ImageFont.truetype(TTF_FONT,
-        size=args.size))
+                    text=args.mark,
+                    fill=args.color,
+                    font=ImageFont.truetype(TTF_FONT,
+                                            size=args.size))
     del draw_table
 
     # 裁剪空白
@@ -107,24 +111,34 @@ def gen_mark(args):
         # 在原图上添加大图水印
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
-        im.paste(mark2, # 大图
-            (int((im.size[0]-c)/2), int((im.size[1]-c)/2)), # 坐标
-            mask=mark2.split()[3])
+        im.paste(mark2,  # 大图
+                 (int((im.size[0]-c)/2), int((im.size[1]-c)/2)),  # 坐标
+                 mask=mark2.split()[3])
         del mark2
         return im
 
     return mark_im
 
+
 def main():
     parse = argparse.ArgumentParser()
-    parse.add_argument("-f", "--file", type=str, help="image file path or directory")
+    parse.add_argument("-f", "--file", type=str,
+                       help="image file path or directory")
     parse.add_argument("-m", "--mark", type=str, help="watermark content")
-    parse.add_argument("-o", "--out", default="./output", help="image output directory, default is ./output")
-    parse.add_argument("-c", "--color", default="#8B8B1B", type=str, help="text color like '#000000', default is #8B8B1B")
-    parse.add_argument("-s", "--space", default=75, type=int, help="space between watermarks, default is 75")
-    parse.add_argument("-a", "--angle", default=30, type=int, help="rotate angle of watermarks, default is 30")
-    parse.add_argument("--size", default=50, type=int, help="font size of text, default is 50")
-    parse.add_argument("--opacity", default=0.15, type=float, help="opacity of watermarks, default is 0.15")
+    parse.add_argument("-o", "--out", default="./output",
+                       help="image output directory, default is ./output")
+    parse.add_argument("-c", "--color", default="#8B8B1B", type=str,
+                       help="text color like '#000000', default is #8B8B1B")
+    parse.add_argument("-s", "--space", default=75, type=int,
+                       help="space between watermarks, default is 75")
+    parse.add_argument("-a", "--angle", default=30, type=int,
+                       help="rotate angle of watermarks, default is 30")
+    parse.add_argument("--size", default=50, type=int,
+                       help="font size of text, default is 50")
+    parse.add_argument("--opacity", default=0.15, type=float,
+                       help="opacity of watermarks, default is 0.15")
+    parse.add_argument("--quality", default=80, type=int,
+                       help="quality of output images, default is 90")
 
     args = parse.parse_args()
 
@@ -140,6 +154,7 @@ def main():
             add_mark(image_file, mark, args)
     else:
         add_mark(args.file, mark, args)
+
 
 if __name__ == '__main__':
     main()
