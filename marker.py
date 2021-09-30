@@ -8,10 +8,6 @@ import math
 
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops
 
-# TTF_FONT = u'./font/青鸟华光简琥珀.ttf'
-TTF_FONT = os.path.join("font", "青鸟华光简琥珀.ttf")
-TTF_FONT = os.path.join(os.path.dirname(os.path.abspath(__file__)), TTF_FONT)
-
 
 def add_mark(imagePath, mark, args):
     '''
@@ -20,8 +16,8 @@ def add_mark(imagePath, mark, args):
     im = Image.open(imagePath)
 
     image = mark(im)
+    name = os.path.basename(imagePath)
     if image:
-        name = os.path.basename(imagePath)
         if not os.path.exists(args.out):
             os.mkdir(args.out)
 
@@ -62,18 +58,23 @@ def gen_mark(args):
     '''
     生成mark图片，返回添加水印的函数
     '''
-    # 字体宽度
+    # 字体宽度、高度
+    is_height_crop_float = '.' in args.font_height_crop  # not good but work
     width = len(args.mark) * args.size
+    if is_height_crop_float:
+        height = round(args.size * float(args.font_height_crop))
+    else:
+        height = int(args.font_height_crop)
 
     # 创建水印图片(宽度、高度)
-    mark = Image.new(mode='RGBA', size=(width, args.size))
+    mark = Image.new(mode='RGBA', size=(width, height))
 
     # 生成文字
     draw_table = ImageDraw.Draw(im=mark)
     draw_table.text(xy=(0, 0),
                     text=args.mark,
                     fill=args.color,
-                    font=ImageFont.truetype(TTF_FONT,
+                    font=ImageFont.truetype(args.font_family,
                                             size=args.size))
     del draw_table
 
@@ -133,6 +134,15 @@ def main():
                        help="space between watermarks, default is 75")
     parse.add_argument("-a", "--angle", default=30, type=int,
                        help="rotate angle of watermarks, default is 30")
+    parse.add_argument("--font-family", default="./font/青鸟华光简琥珀.ttf", type=str,
+                       help="font family of text, default is './font/青鸟华光简琥珀.ttf'.\n"
+                            "using font in system just by font file name.\n"
+                            "for example 'PingFang.ttc', which is default installed on macOS.")
+    parse.add_argument("--font-height-crop", default="1.2", type=str,
+                       help="change watermark font height crop.\n"
+                            "float will be parsed to factor; int will be parsed to value.\n"
+                            "default is '1.2', meaning 1.2 times font size\n"
+                            "This useful with CJK font, because line height may be higher than size.")
     parse.add_argument("--size", default=50, type=int,
                        help="font size of text, default is 50")
     parse.add_argument("--opacity", default=0.15, type=float,
