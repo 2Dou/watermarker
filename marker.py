@@ -5,6 +5,7 @@ import argparse
 import os
 import sys
 import math
+import textwrap
 
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops
 
@@ -88,7 +89,7 @@ def gen_mark(args):
         ''' 在im图片上添加水印 im为打开的原图'''
 
         # 计算斜边长度
-        c = int(math.sqrt(im.size[0]*im.size[0] + im.size[1]*im.size[1]))
+        c = int(math.sqrt(im.size[0] * im.size[0] + im.size[1] * im.size[1]))
 
         # 以斜边长度为宽高创建大图（旋转后大图才足以覆盖原图）
         mark2 = Image.new(mode='RGBA', size=(c, c))
@@ -97,7 +98,7 @@ def gen_mark(args):
         y, idx = 0, 0
         while y < c:
             # 制造x坐标错位
-            x = -int((mark.size[0] + args.space)*0.5*idx)
+            x = -int((mark.size[0] + args.space) * 0.5 * idx)
             idx = (idx + 1) % 2
 
             while x < c:
@@ -113,7 +114,7 @@ def gen_mark(args):
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
         im.paste(mark2,  # 大图
-                 (int((im.size[0]-c)/2), int((im.size[1]-c)/2)),  # 坐标
+                 (int((im.size[0] - c) / 2), int((im.size[1] - c) / 2)),  # 坐标
                  mask=mark2.split()[3])
         del mark2
         return im
@@ -122,7 +123,7 @@ def gen_mark(args):
 
 
 def main():
-    parse = argparse.ArgumentParser()
+    parse = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parse.add_argument("-f", "--file", type=str,
                        help="image file path or directory")
     parse.add_argument("-m", "--mark", type=str, help="watermark content")
@@ -135,14 +136,18 @@ def main():
     parse.add_argument("-a", "--angle", default=30, type=int,
                        help="rotate angle of watermarks, default is 30")
     parse.add_argument("--font-family", default="./font/青鸟华光简琥珀.ttf", type=str,
-                       help="font family of text, default is './font/青鸟华光简琥珀.ttf'.\n"
-                            "using font in system just by font file name.\n"
-                            "for example 'PingFang.ttc', which is default installed on macOS.")
+                       help=textwrap.dedent('''\
+                       font family of text, default is './font/青鸟华光简琥珀.ttf'
+                       using font in system just by font file name
+                       for example 'PingFang.ttc', which is default installed on macOS
+                       '''))
     parse.add_argument("--font-height-crop", default="1.2", type=str,
-                       help="change watermark font height crop.\n"
-                            "float will be parsed to factor; int will be parsed to value.\n"
-                            "default is '1.2', meaning 1.2 times font size\n"
-                            "This useful with CJK font, because line height may be higher than size.")
+                       help=textwrap.dedent('''\
+                       change watermark font height crop
+                       float will be parsed to factor; int will be parsed to value
+                       default is '1.2', meaning 1.2 times font size
+                       this useful with CJK font, because line height may be higher than size
+                       '''))
     parse.add_argument("--size", default=50, type=int,
                        help="font size of text, default is 50")
     parse.add_argument("--opacity", default=0.15, type=float,
