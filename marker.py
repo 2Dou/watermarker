@@ -7,7 +7,7 @@ import sys
 import math
 import textwrap
 
-from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageChops, ImageOps
 
 
 def add_mark(imagePath, mark, args):
@@ -15,6 +15,7 @@ def add_mark(imagePath, mark, args):
     添加水印，然后保存图片
     '''
     im = Image.open(imagePath)
+    im = ImageOps.exif_transpose(im)
 
     image = mark(im)
     name = os.path.basename(imagePath)
