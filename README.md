@@ -40,4 +40,4 @@ optional arguments:
 
 `python marker.py -f ./input/test.png -m 添加水印`
 
-![](/2Dou/watermarker/raw/master/output/test.png)
+![](/2Dou/watermarker/raw/master/output/test.png?raw=true)
