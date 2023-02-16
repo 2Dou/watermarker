@@ -154,7 +154,7 @@ def main():
     parse.add_argument("--opacity", default=0.15, type=float,
                        help="opacity of watermarks, default is 0.15")
     parse.add_argument("--quality", default=80, type=int,
-                       help="quality of output images, default is 90")
+                       help="quality of output images, default is 80")
 
     args = parse.parse_args()
 
