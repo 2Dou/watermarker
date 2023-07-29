@@ -123,7 +123,7 @@ def gen_mark(args):
     return mark_im
 
 
-def main():
+def main(args):
     parse = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parse.add_argument("-f", "--file", type=str,
                        help="image file path or directory")
@@ -156,7 +156,7 @@ def main():
     parse.add_argument("--quality", default=80, type=int,
                        help="quality of output images, default is 80")
 
-    args = parse.parse_args()
+    args = parse.parse_args(args)
 
     if isinstance(args.mark, str) and sys.version_info[0] < 3:
         args.mark = args.mark.decode("utf-8")
@@ -173,4 +173,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
