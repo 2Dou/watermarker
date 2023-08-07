@@ -36,6 +36,15 @@ optional arguments:
   --quality QUALITY     quality of output images, default is 90
 ```
 
+通过GUI界面使用
+
+```
+python .\tkgui.py
+```
+
+![](/input/thinker_gui.png)
+
+
 # 效果
 
 `python marker.py -f ./input/test.png -m 添加水印`
